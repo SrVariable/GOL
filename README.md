@@ -4,7 +4,7 @@ The mythical Conway's Game of Life made in C using raylib.
 
 # Preview
 
-[Preview](https://github.com/SrVariable/GOL/tree/master/preview/video.webm)
+https://github.com/SrVariable/GOL/assets/96599624/68378f84-1505-4b04-8f26-13d9cb6189b5
 
 # Installation
 
