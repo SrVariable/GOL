@@ -33,3 +33,9 @@ libxinerama-dev libwayland-dev libxkbcommon-dev
 Execute ```make run``` and it will start the game. Left click on a dead cell to put an alive cell or viceversa.
 To put a pattern, hold its respective key and left click. For example <kbd>G</kbd> + <kbd>Left Click</kbd> will place
 a Glider in the selected zone.
+
+# References
+
+- Game of Life: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+- Patterns: https://www.researchgate.net/figure/Selected-morphologies-in-the-Game-of-Life-Their-identification-in-the-environment_fig5_318515088
+- Raylib: https://github.com/raysan5/raylib/blob/master/src/raylib.h
