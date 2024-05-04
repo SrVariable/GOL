@@ -6,14 +6,15 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 02:40:00 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/05/03 21:42:53 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/05/04 10:28:22 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define WIDTH 40
-#define HEIGHT 20
+#define WIDTH 50
+#define HEIGHT 25
 #define PIXEL_SIZE 16
-#define UPDATE_RATE 300
+#define RATIO (WIDTH / HEIGHT)
+#define UPDATE_RATE 11
 
 #include "raylib.h"
 #include "raymath.h"
@@ -37,13 +38,14 @@ static void	move_camera_with_mouse_cursor(Camera2D *camera,
 
 static void	initialise_scene(Camera2D *camera)
 {
-	camera->zoom = 1.5f;
-	camera->offset.x = 1.0f;
-	camera->offset.y = 1.0f;
+	camera->zoom = 1.0f;
+	camera->offset.x = 0;
+	camera->offset.y = 0;
+	SetTargetFPS(60);
 	HideCursor();
 }
 
-static int	count_neighbours(bool cell[WIDTH][HEIGHT], int x, int y)
+static int	count_neighbours(bool cell[WIDTH][HEIGHT], Vector2 position)
 {
 	int	neighbour;
 
@@ -54,9 +56,9 @@ static int	count_neighbours(bool cell[WIDTH][HEIGHT], int x, int y)
 		{
 			if (i == 0 && j == 0)
 				continue;
-			if ((x + i >= 0 && x + i < WIDTH)
-				&& (y + j >= 0 && y + j < HEIGHT)
-				&& cell[x + i][y + j])
+			if (((int)position.x + i >= 0 && (int)position.x + i < WIDTH)
+				&& ((int)position.y + j >= 0 && (int)position.y + j < HEIGHT)
+				&& cell[(int)position.x + i][(int)position.y + j])
 				++neighbour;
 		}
 	}
@@ -72,15 +74,29 @@ static void	update_board(bool cell[WIDTH][HEIGHT])
 	{
 		for (int j = 0; j < HEIGHT; ++j)
 		{
-			neighbours = count_neighbours(cell, i, j);
+			neighbours = count_neighbours(cell, (Vector2){i, j});
 			if (neighbours == 3)
 				temp[i][j] = true;
-			else if (neighbours != 2 && neighbours != 3)
+			else if (neighbours == 2)
+				temp[i][j] = cell[i][j];
+			else
 				temp[i][j] = false;
 		}
 	}
 	for (int i = 0; i < WIDTH; ++i)
 		memcpy(cell[i], temp[i], HEIGHT * sizeof(bool));
+}
+
+static void	draw_board(bool cell[WIDTH][HEIGHT])
+{
+	for (int i = 0; i < WIDTH; ++i)
+		for (int j = 0; j < HEIGHT; ++j)
+			if (!cell[i][j])
+				DrawRectangle(i * PIXEL_SIZE, j * PIXEL_SIZE,
+								PIXEL_SIZE, PIXEL_SIZE, BLACK);
+			else
+				DrawRectangle(i * PIXEL_SIZE, j * PIXEL_SIZE,
+								PIXEL_SIZE, PIXEL_SIZE, RED);
 }
 
 static void	gol(bool cell[WIDTH][HEIGHT])
@@ -91,27 +107,46 @@ static void	gol(bool cell[WIDTH][HEIGHT])
 				cell[i][j] = false;
 }
 
+static void	put_glider(bool cell[WIDTH][HEIGHT], Vector2 position)
+{
+	if (((int)position.x < 0 || (int)position.x + 2 >= WIDTH)
+			&& ((int)position.y < 0 || (int)position.y + 2 >= HEIGHT))
+		return ;
+	cell[2 + (int)position.x][0 + (int)position.y] = true;
+	cell[2 + (int)position.x][1 + (int)position.y] = true;
+	cell[2 + (int)position.x][2 + (int)position.y] = true;
+	cell[1 + (int)position.x][2 + (int)position.y] = true;
+	cell[0 + (int)position.x][1 + (int)position.y] = true;
+}
+
+static void	click_cell(bool cell[WIDTH][HEIGHT])
+{
+	int	x;
+	int y;
+
+	x = GetMouseX() / PIXEL_SIZE;
+	y = GetMouseY() / PIXEL_SIZE;
+	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+		return ;
+	cell[x][y] = !cell[x][y];
+}
+
 int	main(void)
 {
 	Vector2 		previousMousePosition;
 	Camera2D		camera;
 	static bool		cell[WIDTH][HEIGHT];
 	static float	size;
-	static int		delay = 1;
+	static int		frame_count;
+	static bool		isPaused = true;
+	static int		delay;
 
 	gol(cell);
-	cell[5][10] = true;
-	cell[6][10] = true;
-	cell[6][11] = true;
-	cell[7][10] = true;
-	cell[5 + 10][10] = true;
-	cell[6 + 10][10] = true;
-	cell[6 + 10][11] = true;
-	cell[7 + 10][10] = true;
-	cell[5 + 20][10] = true;
-	cell[6 + 20][10] = true;
-	cell[6 + 20][11] = true;
-	cell[7 + 20][10] = true;
+
+	put_glider(cell, (Vector2){0, 0});
+	put_glider(cell, (Vector2){8, 0});
+	put_glider(cell, (Vector2){16, 0});
+
 	InitWindow(WIDTH * PIXEL_SIZE, HEIGHT * PIXEL_SIZE, "GOL");
 	initialise_scene(&camera);
 	previousMousePosition = GetMousePosition();
@@ -121,19 +156,28 @@ int	main(void)
 		BeginDrawing();
 		ClearBackground(GetColor(0x106969ff));
 		BeginMode2D(camera);
-		for (int i = 1; i < WIDTH; ++i)
-			for (int j = 1; j < HEIGHT; ++j)
-				if (!cell[i][j])
-					DrawRectangle(i * PIXEL_SIZE, j * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, BLACK);
-				else
-					DrawRectangle(i * PIXEL_SIZE, j * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, RED);
+		draw_board(cell);
 		EndMode2D();
-		DrawCircle(GetMouseX() - PIXEL_SIZE / 4, GetMouseY() - PIXEL_SIZE / 4, PIXEL_SIZE / 4 + size, WHITE);
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			click_cell(cell);
+		DrawCircle(GetMouseX() - PIXEL_SIZE / 4, GetMouseY() - PIXEL_SIZE / 4,
+					PIXEL_SIZE / 4 + size, WHITE);
+		if (isPaused)
+			DrawText("Press space to play",
+					GetScreenWidth() / 6, GetScreenHeight() / 2.5, RATIO * PIXEL_SIZE, WHITE);
 		EndDrawing();
-		if (delay++ % UPDATE_RATE == 0)
+		if (IsKeyPressed(KEY_SPACE))
+			isPaused = !isPaused;
+		else if (IsKeyDown(KEY_COMMA))
+			++delay;
+		else if (IsKeyDown(KEY_PERIOD) && UPDATE_RATE + delay > 1)
+			--delay;
+		if (++frame_count % (int)(UPDATE_RATE + delay) == 0 && !isPaused)
+		{
 			update_board(cell);
-		if (delay == 10000)
-			delay = 0;
+			if (frame_count == 10000)
+				frame_count = 0;
+		}
 	}
 	CloseWindow();
 	return (0);
