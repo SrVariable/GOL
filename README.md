@@ -17,6 +17,10 @@ libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev \
 libxinerama-dev libwayland-dev libxkbcommon-dev
 ```
 
+## Windows
+
+Follow these steps: https://github.com/raysan5/raylib/wiki/Working-on-Windows#manual-setup-with-w64devkit
+
 # Controls
 
 |Key|Description|
