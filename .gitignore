@@ -1,7 +1,4 @@
 *.o
-*.a
-*.so
-*.dll
 *.swp
 *.out
 *.exe
