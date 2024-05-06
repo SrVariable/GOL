@@ -4,5 +4,6 @@
 *.dll
 *.swp
 *.out
+*.exe
 tags
 GOL

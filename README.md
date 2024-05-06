@@ -19,7 +19,7 @@ libxinerama-dev libwayland-dev libxkbcommon-dev
 
 ## Windows
 
-Follow these steps: https://github.com/raysan5/raylib/wiki/Working-on-Windows#manual-setup-with-w64devkit
+Follow steps 1, 2, 3: https://github.com/raysan5/raylib/wiki/Working-on-Windows#manual-setup-with-w64devkit
 
 # Controls
 
@@ -43,3 +43,7 @@ a Glider in the selected zone.
 - Game of Life: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 - Patterns: https://www.researchgate.net/figure/Selected-morphologies-in-the-Game-of-Life-Their-identification-in-the-environment_fig5_318515088
 - Raylib: https://github.com/raysan5/raylib/blob/master/src/raylib.h
+
+# Contributing
+
+If you find any bug or have any suggestion, please open an issue [here](https://github.com/SrVariable/BFL/issues/new).
