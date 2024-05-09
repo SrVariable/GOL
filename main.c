@@ -6,7 +6,7 @@
 /*   By: ribana-b <ribana-b@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 02:40:00 by ribana-b          #+#    #+# Malaga      */
-/*   Updated: 2024/05/04 12:31:02 by ribana-b         ###   ########.com      */
+/*   Updated: 2024/05/09 06:34:51 by ribana-b         ###   ########.com      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,21 @@ static int	count_neighbours(bool board[WIDTH][HEIGHT], Vector2 position)
 	return (neighbour);
 }
 
+static void	draw_board(bool board[WIDTH][HEIGHT])
+{
+	for (int i = 0; i < WIDTH; ++i)
+		for (int j = 0; j < HEIGHT; ++j)
+			if (board[i][j])
+				DrawRectangle(i * PIXEL_SIZE, j * PIXEL_SIZE,
+								PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+}
+
+static void	clear_board(bool board[WIDTH][HEIGHT])
+{
+	for (int i = 0; i < WIDTH; ++i)
+		memset(board[i], false, HEIGHT);
+}
+
 static void	update_board(bool board[WIDTH][HEIGHT])
 {
 	static bool temp[WIDTH][HEIGHT];
@@ -81,82 +96,7 @@ static void	update_board(bool board[WIDTH][HEIGHT])
 		memcpy(board[i], temp[i], HEIGHT * sizeof(bool));
 }
 
-static void	draw_board(bool board[WIDTH][HEIGHT])
-{
-	for (int i = 0; i < WIDTH; ++i)
-		for (int j = 0; j < HEIGHT; ++j)
-			if (board[i][j])
-				DrawRectangle(i * PIXEL_SIZE, j * PIXEL_SIZE,
-								PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-}
-
-static void	put_glider(bool board[WIDTH][HEIGHT], Vector2 position)
-{
-	int	x;
-	int	y;
-
-	x = (int)position.x;
-	y = (int)position.y;
-	if ((x < 0 || x + 2 >= WIDTH) && (y < 0 || y + 2 >= HEIGHT))
-		return ;
-	board[x + 2][y + 0] = true;
-	board[x + 2][y + 1] = true;
-	board[x + 2][y + 2] = true;
-	board[x + 1][y + 2] = true;
-	board[x + 0][y + 1] = true;
-}
-
-static void	draw_glider(Vector2 position)
-{
-	int	x;
-	int	y;
-
-	x = (int)position.x;
-	y = (int)position.y;
-	if ((x < 0 || x + 2 >= WIDTH) && (y < 0 || y + 2 >= HEIGHT))
-		return ;
-	DrawRectangle((x + 2) * PIXEL_SIZE, (y + 0) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-	DrawRectangle((x + 2) * PIXEL_SIZE, (y + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-	DrawRectangle((x + 2) * PIXEL_SIZE, (y + 2) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-	DrawRectangle((x + 1) * PIXEL_SIZE, (y + 2) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-	DrawRectangle((x + 0) * PIXEL_SIZE, (y + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-}
-
-static void	put_blinker(bool board[WIDTH][HEIGHT], Vector2 position)
-{
-	int	x;
-	int	y;
-
-	x = (int)position.x;
-	y = (int)position.y;
-	if ((x < 0 || x + 2 >= WIDTH) && (y < 0 || y + 2 >= HEIGHT))
-		return ;
-	board[x + 0][y] = true;
-	board[x + 1][y] = true;
-	board[x + 2][y] = true;
-}
-
-static void	draw_blinker(Vector2 position)
-{
-	int	x;
-	int	y;
-
-	x = (int)position.x;
-	y = (int)position.y;
-	if ((x < 0 || x + 2 >= WIDTH) && y < 0)
-		return ;
-	DrawRectangle((x + 0) * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-	DrawRectangle((x + 1) * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-	DrawRectangle((x + 2) * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
-}
-
-static void	clear_board(bool board[WIDTH][HEIGHT])
-{
-	for (int i = 0; i < WIDTH; ++i)
-		memset(board[i], false, HEIGHT);
-}
-
-static void	click_cell(bool board[WIDTH][HEIGHT])
+static void	click_on_the_board(bool board[WIDTH][HEIGHT])
 {
 	int	x;
 	int	y;
@@ -166,6 +106,66 @@ static void	click_cell(bool board[WIDTH][HEIGHT])
 	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
 		return ;
 	board[x][y] = !board[x][y];
+}
+
+static void	draw_glider(Vector2 position)
+{
+	int	x;
+	int	y;
+
+	x = (int)position.x;
+	y = (int)position.y;
+	if (x < 0 || x + 2 >= WIDTH || y < 0 || y + 2 >= HEIGHT)
+		return ;
+	DrawRectangle((x + 2) * PIXEL_SIZE, (y + 0) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+	DrawRectangle((x + 2) * PIXEL_SIZE, (y + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+	DrawRectangle((x + 2) * PIXEL_SIZE, (y + 2) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+	DrawRectangle((x + 1) * PIXEL_SIZE, (y + 2) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+	DrawRectangle((x + 0) * PIXEL_SIZE, (y + 1) * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+}
+
+static void	put_glider(bool board[WIDTH][HEIGHT], Vector2 position)
+{
+	int	x;
+	int	y;
+
+	x = (int)position.x;
+	y = (int)position.y;
+	if (x < 0 || x + 2 >= WIDTH || y < 0 || y + 2 >= HEIGHT)
+		return ;
+	board[x + 2][y + 0] = true;
+	board[x + 2][y + 1] = true;
+	board[x + 2][y + 2] = true;
+	board[x + 1][y + 2] = true;
+	board[x + 0][y + 1] = true;
+}
+
+static void	draw_blinker(Vector2 position)
+{
+	int	x;
+	int	y;
+
+	x = (int)position.x;
+	y = (int)position.y;
+	if (x < 0 || x + 2 >= WIDTH || y < 0 || y >= HEIGHT)
+		return ;
+	DrawRectangle((x + 0) * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+	DrawRectangle((x + 1) * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+	DrawRectangle((x + 2) * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, FOREGROUND_COLOR);
+}
+
+static void	put_blinker(bool board[WIDTH][HEIGHT], Vector2 position)
+{
+	int	x;
+	int	y;
+
+	x = (int)position.x;
+	y = (int)position.y;
+	if (x < 0 || x + 2 >= WIDTH || y < 0 || y >= HEIGHT)
+		return ;
+	board[x + 0][y] = true;
+	board[x + 1][y] = true;
+	board[x + 2][y] = true;
 }
 
 int	main(void)
@@ -215,7 +215,7 @@ int	main(void)
 			clear_board(board);
 		else
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-				click_cell(board);
+				click_on_the_board(board);
 		DrawCircle(GetMouseX(), GetMouseY(), PIXEL_SIZE / 4, CURSOR_COLOR);
 		EndDrawing();
 		if (++frameCount % (UPDATE_RATE + delay) == 0 && !isPaused)
