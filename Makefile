@@ -3,7 +3,7 @@ NAME = GOL
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 CPPFLAGS = -I./ -I$(RAYLIB_DIR)/include
-LDFLAGS = -L$(RAYLIB_DIR)
+LDFLAGS = -L$(RAYLIB_DIR)/lib
 
 ifeq ($(OS), Windows_NT)
 	LDLIBS = $(RAYLIB_DIR)/lib/libraylib.a -lgdi32 -lwinmm
