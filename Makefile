@@ -1,7 +1,7 @@
 NAME = GOL
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS =#-Wall -Wextra -Werror
 CPPFLAGS = -I./ -I$(RAYLIB_DIR)/include
 
 ifeq ($(OS), Windows_NT)
@@ -37,4 +37,4 @@ re: fclean all
 run: $(NAME)
 	./$(NAME)
 
-.PHONY = all clean fclean win re run
+.PHONY = all clean fclean re run
