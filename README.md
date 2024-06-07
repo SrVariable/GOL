@@ -35,7 +35,7 @@ Follow steps 1, 2, 3: https://github.com/raysan5/raylib/wiki/Working-on-Windows#
 
 # How to play
 
-Execute ```make run``` and it will start the game. Left click on a dead cell to put an alive cell or viceversa.
+Execute ```make run``` and it will start the game. Left click to put an alive cell or right click to put a dead cell.
 To put a pattern, hold its respective key and left click. For example <kbd>G</kbd> <kbd>Left Click</kbd> will place
 a Glider in the selected zone.
 
