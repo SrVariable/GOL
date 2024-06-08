@@ -25,13 +25,17 @@ Follow steps 1, 2, 3: https://github.com/raysan5/raylib/wiki/Working-on-Windows#
 
 |Key|Description|
 |-|-|
-|<kbd>Space</kbd>|Pause / Play game|
 |<kbd>B</kbd>|Blinker|
 |<kbd>G</kbd>|Glider / Gospel Gun Glider|
 |<kbd>Left Click</kbd>|Put cell|
 |<kbd>Right Click</kbd>|Remove cell|
 |<kbd>.</kbd>|Increase speed|
 |<kbd>,</kbd>|Decrease speed|
+|<kbd>Space</kbd>|Pause / Play game|
+|<kbd>R</kbd>|Restart board|
+
+> [!NOTE]
+> If you press <kbd>Shift</kbd> when using a key to select a pattern, it will switch reversed.
 
 # How to play
 
